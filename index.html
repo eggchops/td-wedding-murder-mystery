@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en-AU" dir="ltr">
+	<head>
+		<title>
+			A Most Mysterious Murder
+		</title>
+		<!-- Hi friend! If you are inspecting this page, please know that we love you lots and I'm so glad you could join in with the chaos of our wedding.
+			Feel free to examine the wonderful mess of code below.
+			All the clues are hardcoded and super visible so please don't spoil the mystery for anyone! xx David -->
+		<link rel="icon" type="image/x-icon" href="https://td-wedding-murder-mystery.s3.amazonaws.com/assets/favicon.ico">
+		<style>
+			/* CSS in here */
+
+			html body{
+				background-color: #FFF3D6;
+			}
+
+			.timer-container{
+				clip-path: polygon(0 0, 0 0, 50% 50%, 0 100%, 0 100%, 48% 100%, 100% 100%, 100% 100%, 50% 50%, 100% 0, 100% 0, 48% 0);
+				width: 100%;
+				height: 300px;
+				background-color: #A99B4A;
+			}
+
+			.timer-top{
+				clip-path: polygon(50% 100%, 0 0, 100% 0);
+				background-color: #F1B715;
+				margin: auto;
+				height: 150px;
+			}
+			.timer-bottom{
+				clip-path: polygon(50% 0, 0 100%, 100% 100%);
+				background-color: #F1B715;
+				margin: auto;
+				height: 150px;
+			}
+
+
+			.body{
+				font-family: 'Garamond', 'Times New Roman', 'Arial';
+				font-size: x-large;
+				max-width: fit-content;
+				color: #604632 !important;
+			}
+			
+			.header{
+				margin-bottom: 20px;
+				position:relative;
+				top:0;
+				background-color:#A99B4A;
+				text-align: center;
+				color: #FFF3D6 !important;
+				padding-top: 5%;
+			}
+
+			.fleurs{
+				transform: scaleY(-1);
+				position:relative;
+				bottom:0;
+				margin-top: -20%;
+				max-width: 100%;
+			}
+
+			.footer{
+				margin-top: 0px;
+				padding-top: 10px;
+				position:static;
+				bottom:0;
+				background-color:#A99B4A;
+				text-align: center;
+				min-height: 80px;
+			}
+
+			a{
+				color: #FFF3D6 !important;
+			}
+
+			h2{
+				font-weight: 700 !important;
+			}
+
+			.thumbnail{
+				text-align: center;
+				background-color: #fff8e9;
+				border: 2px solid #604632;
+				border-radius: 6px;
+				margin: 6px;
+			}
+
+			img{
+				max-width: 80%;
+			}
+
+			.wanted{
+				box-shadow: 2px 2px lightgrey;
+				margin-bottom: 20px;
+			}
+
+			.btn{
+				margin-left: 2px;
+			}
+
+			.btn-primary{
+				background-color: #83783C !important;
+				border: none !important;
+			}
+
+			.btn-light{
+				background-color: #F1B715 !important;
+				border: none !important;
+			}
+
+			.completed{
+				font-style: italic;
+			}
+
+			.popup {
+				width:80%;
+				padding:20px;
+				background-color:#FEE3A6;    
+				position:relative;
+				top:0%;
+				left:10%;
+				display:none;
+				text-align: center;
+				border-radius: 6px;
+				font-size: large;
+				margin-top: 5px;
+			}
+
+			.blurred{
+				filter: blur(6px);
+				display: none;
+			}
+
+			@keyframes fadein{
+				from {opacity: 0;}
+				to {opacity: 100%;}
+			}
+			.fadein{
+				animation-name: fadein;
+				animation-duration: 0.8s;
+			}
+
+			@keyframes fadeout{
+				from {opacity: 100%;}
+				to {opacity: 0%;}
+			}
+			.fadeout{
+				animation-name: fadeout;
+				animation-duration: 0.8s;
+				opacity: 0%;
+			}
+
+			.reward{
+				border-top: 1px solid grey;
+				font-size:large;
+			}
+
+			.report{
+				background-color: white;
+				border: 6px solid black;
+				border-radius: 6px;
+				font-family:'Courier New', Courier, monospace;
+				font-size: medium;
+				color: black;
+			}
+
+		</style>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+	</head>
+	<body>
+		<div id="countdown">
+			<div class="report m-2 p-2 text-center" style="height: 500px;">
+				<strong style="font-size: xx-large;">SOON</strong><br />
+					<p>
+						Prepare for something <b>mysterious</b>. <br/>
+					</p>
+					<div class="timer-container">
+						<div class="timer-top" id="timer-top" style="width:100%;">
+						</div>
+						<div class="timer-bottom" id="timer-bottom" style="width:0%;">
+						</div>
+					</div>
+			</div>
+			<div style="position: absolute; bottom:1%; left:25%; right:25%;" class="text-center">
+				<button class="btn btn-light" id="globe" onclick="confirmUnlock()">
+					🌍
+				</button>
+				<div class="d-none" id="submit-unlock">
+					<input type="text" name="global-unlock" id="global-unlock" placeholder="Passcode..." />
+					<button class="btn btn-light" onclick="submitUnlock()">
+						Submit
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<main class="body d-none" id="app">
+			<!-- Heading -->
+			<div id="header" class="header">
+				<h1 style="font-size:180%;"> A Most Mysterious Murder</h1>
+				<span class="fleur-container d-md-none" data-fill="FFF3D6" data-style=""></span>
+			</div>
+			<div class="col-12 p-1 text-center">
+				<strong style="font-size: xx-large;">~Thank you for playing!~</strong><br />
+				<iframe  width="560" height="315" src="https://www.youtube.com/embed/zRr7prIcpL8" title="YouTube video player" 
+					frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+				<p>
+					<button class="btn btn-primary" onclick="showSolution(this)">Show solution</button> <br/>
+					<a href="https://drive.google.com/drive/folders/1JTpk9AhJOBhuSlsH7hWw0JGmIA6q9ZJT?usp=sharing" style="color:#604632 !important;">Click here to access the evidence cards.</a>
+				</p>
+				<div class="col-12 p-2 text-center d-none" id="solution">
+					<div class="report">
+						<strong style="font-size: xx-large;">Solution</strong><br />
+						<p>
+							As we are all aware, earlier this evening Countess Mulkween was murdered most dramatically.
+							Nine suspects were taken in for questioning immediately, and many of our esteemed resident detectives have been incredibly diligent in investigating who could have committed such a foul deed.
+							I am pleased to announce that the murderer has been apprehended, and I can reveal who among you was accurate in identifying the correct suspect.
+							The Doctor… is innocent. A beloved family friend of the Countess, the Doctor was vital in determining the exact cause of death: a poisoned vegan macaron.
+							This may have led folks to point the finger at the Captain, who was to launch a macaron empire with the Countess – though with her recent death he is now penniless, pontoon-less, and pathetic. Not a likely culprit.
+							What of the Countess’ heir Tom, founder of social media empire MySpace? He stands to gain the most financially from the murder, but I ask you what is a million to a multi-billionaire?
+							This leads us to the Lord, who knew that despite her love of vegan confections the Countess despised the animal kingdom like a vampire rues the very sun that gives us life. While the Lord may have resented her this moral insufficiency, no man with a love for a treat-fixated sausage dog would risk poisoning his dearest canine companion with a wayward toxic macaron.
+							No, we are dealing with a most tangled web of intrigue here, with the Countess’ lucrative underground aquafaba monopoly a gluttonous spider at its centre. The Principessa throws suspicion on the Professor, while herself being the target of the Lady’s ire. A veritable plant-based mess of mistrust.
+							My conclusion is that the lost and confused Miss Jennifer Coolidge was right to mistrust the young Baron – a favourite of the Contessa’s yet not a mention of him in her last will and testament? I see his resentment at being overlooked churning in him like a curdled crème Anglaise.
+							The Baron caused the innocent, trusting Principessa to suspect her friend the Professor of murderous greed. He convinced her to mix a secret antidote into the macaron batter that killed the Countess, thinking she was saving her life. This antidote? Cold, hard cyanide.
+							So there you have it – the Baron, by way of fooling the Principessa, guilty as charged.
+							Congratulations to those who found the correct killer, I look forward to sharing a glass of warm milk with you in celebration.
+							Thank you for playing our little game, I will now hand you back to Mister Midolo for the remainder of the festivities.
+						</p>
+					</div>
+				</div>
+				<p>😱 Shock! Horror! To be reading this, you must have stumbled upon a piece of evidence you will need to solve the mystery of a particularly mysterious murder.
+					Whether you're working with a group or investigating alone, good luck, Detective!
+				</p>
+			</div>
+			<!-- Ghost image -->
+			<div class="col-12 p-0 text-center">
+				<strong style="font-size: xx-large;">~How to Play~</strong><br />
+				<img src="https://www.publicdomainpictures.net/pictures/420000/velka/image-1632475212vFW.png" alt="" />
+			</div>
+			<!-- Generate content to add below -->
+			<div id="content" class="d-flex flex-column">
+				<div class="col-12 p-2">
+					<p style="text-align:center;">
+						<ul>
+							<li>Find evidence cards around the venue. Each card contains an encrypted Code Word, and relates to a particular suspect below.</li><br />
+							<li>Touch Investigate to enter a suspect's Code Word and gain a clue as to the murderer's identity.</li><br />
+							<li>When you think you've cracked the case, hit "I'm ready to solve this!" and identify the culprit!</li><br />
+							<li><i>Note: It's probably a good idea to screenshot clues as you unlock them in case the page refreshes.</i></li>
+						</ul>					
+					</p>
+				</div>
+				<div class="col-12 p-2 text-center">
+					<div class="report">
+						<strong style="font-size: xx-large;">Incident Report</strong><br />
+						<p>
+							The victim, celebrity baker <b>Countess Mulkween</b>, died suddenly and dramatically from what <i>appears</i> to be a most sophisticated poison. <br/>
+							The method of ingestion is unknown, though traces of powdered meringue and rich chocolate ganache were found around the victim's nostrils and fingernails.
+						</p>
+					</div>
+				</div>
+				<div class="col-12 p-2 text-center">
+					<br /><strong style="font-size: xx-large;">~The Suspects~</strong><br />
+				</div>
+			</div> 
+			<div class="thumbnail d-none" id="victim">
+				<span class="row m-0">
+					<h2>BONUS: Countess Mulkween</h2>
+							<div class="col-5 my-auto">
+								<img src="https://td-wedding-murder-mystery.s3.amazonaws.com/assets/ghost.png" id=":id" class="wanted" />
+							</div>
+							<div class="col-7">
+								<p style="font-size:large;">Having unlocked all prior clues, the Countess herself speaks to you from beyond the grave.</p>
+								<p class="reward"><b>Clue:</b> I don't know whodunnit, but geez I'm touched that you've investigated my nasty murder so well. Go tell Trav and Davie, I bet they'll be chuffed!</p>
+							</div>
+							</span>
+						</div>
+			<!-- Persistent footer with link to Google Form -->
+			<span class="fleur-container d-md-none" data-fill="604632" data-style="margin-top:-8%; "></span>
+			<div id="footer" class="footer">
+				<a href="https://forms.gle/rLTYfuVatLhqSEoA7" target="_blank">I'm ready to solve this!</a>
+			</div> 
+		</main>
+
+		<script type="text/javascript">
+			// Scripts in here
+			var items = [];
+			var complete = 0;
+			var unlockDate = new Date("Mar 04, 2023 16:05:00").getTime();
+			var countdownDate = new Date("Mar 04, 2023 13:00:00").getTime();
+			var timerMax = unlockDate - countdownDate;
+
+			var unlocked = false;
+
+			// Functions to build the page
+
+			window.onload = function () {
+
+				// Count down until the murder has occurred
+				var x = setInterval(function() {
+					var now = new Date().getTime();
+					var distance = unlockDate - now;
+					var newTop = Math.floor(100 * distance/timerMax);
+					if(newTop < 100){
+						document.getElementById("timer-top").style.width = newTop+"%";
+						document.getElementById("timer-bottom").style.width = (100 - newTop) + "%";
+					}
+					if(distance < 0 || unlocked == true) {
+						clearInterval(x);
+						showApp();
+						loadFleurs();
+						loadData();
+						populate();
+					}
+				},1000);
+			};
+
+			// Unlock function for overseas friends
+			function confirmUnlock(){
+				if(confirm("The mystery should begin around 4pm local time. Please only unlock this if the mystery has started and you're in a different timezone.")){
+					document.getElementById("submit-unlock").className = "d-block";
+					document.getElementById("globe").className = "d-none";
+				}
+			}
+
+			function submitUnlock(){
+				if(document.getElementById("global-unlock").value.toUpperCase() == "TOBY_PORG"){
+					unlocked = true;
+				}
+			}
+
+			function showApp(){
+				document.getElementById("countdown").style.display = "none";
+				document.getElementById("app").className = "body";
+			}
+
+			function showSolution(btn){
+				document.getElementById("solution").className = "col-12 p-2 text-center";
+				btn.className = "d-none";
+			}
+
+			function loadFleurs(){
+				Array.prototype.forEach.call(document.getElementsByClassName("fleur-container"), function(element){
+					element.innerHTML = fleurs.replace(":colour",element.dataset.fill).replace(":style",element.dataset.style);
+				});
+			}
+
+			function loadData(){
+				let inputs = content.split("\n");
+				inputs.forEach((line,index) => {
+					let obj = line.split("\t");
+					if(obj[0].length){
+						items.push({
+							"id" : ("item_"+ index),
+							"name" : obj[0],
+							"image" : obj[1],
+							"password": obj[2],
+							"reward" : obj[3],
+							"bio" : obj[4],
+						});
+					}
+				});
+			}
+
+			function populate(){
+				items.forEach(item => {
+					var thumbnail = (scaffold+popup).replaceAll(":name",item.name).replace(":image",item.image).replaceAll(":id",item.id).replace(":reward",item.reward).replace(":bio",item.bio);
+					document.getElementById("content").innerHTML += "<br />"+ thumbnail;
+				});
+			}
+
+			// Functions to deal with user inputs
+
+			function reveal(e){
+				Array.prototype.forEach.call(document.getElementsByClassName("popup"), function(element){
+					element.style.display = "none";
+				});
+				var item = getItemById(e.id);
+				showPopup(e.id);
+			}
+
+			function done(id,close = false) { 
+				if(close){
+					document.getElementById("popup_"+id).style.display = "none";
+					return;
+				}
+				var password = document.getElementById("pass_"+id).value;
+				var item = getItemById(id);
+				if(password.toUpperCase() == item.password.toUpperCase()){
+					document.getElementById(id).onclick = "";
+					document.getElementById(id).className = "mb-2 btn completed";
+					document.getElementById(id).innerText = "Investigated";
+					document.getElementById("popup_"+id).style.display = "none";
+					document.getElementById("reward_"+id).className = "fadein reward";
+					complete++;
+				} else{
+					document.getElementById("pass_"+id).value = "";
+					document.getElementById("pass_"+id).placeholder = "That's not quite it..."
+				}
+
+				if(complete == items.length){
+					document.getElementById("victim").className = "thumbnail";
+				}
+			};
+
+			function showPopup(id) {
+				document.getElementById("popup_"+id).style.display = "block";
+				document.getElementById("popup_"+id).scrollIntoView();
+			}
+
+			function getItemById(id){
+				return items[id.replace("item_","")];
+			}
+
+
+			// Data storage
+			// Don't peep here unless you want spoilers!
+
+			const fleurs = `				<svg version="1.0" xmlns="http://www.w3.org/2000/svg" class="fleurs"
+					style=":style"
+					width="359.000000pt" height="149.000000pt" viewBox="0 0 359.000000 149.000000"
+					preserveAspectRatio="xMidYMid meet">
+						<g transform="translate(0.000000,149.000000) scale(0.100000,-0.100000)"
+						fill="#:colour" stroke="none">
+						<path d="M859 1481 c19 -3 38 -13 42 -21 50 -92 129 -275 129 -301 0 -9 12
+						-24 26 -34 25 -16 25 -16 15 4 -8 13 -8 28 -1 46 5 14 10 38 9 53 -1 20 -4 15
+						-11 -18 -9 -41 -11 -43 -24 -25 -8 10 -14 41 -14 67 0 58 -18 103 -66 170 -25
+						33 -33 52 -26 57 6 4 -17 7 -51 8 -44 0 -52 -1 -28 -6z"/>
+						<path d="M1423 1482 c42 -1 77 -5 77 -8 0 -3 -10 -18 -21 -33 -12 -16 -23 -49
+						-25 -72 -2 -24 -7 -70 -10 -102 -6 -62 20 -207 37 -207 6 0 7 4 4 10 -13 20
+						-28 137 -26 194 1 21 8 51 16 65 15 29 62 77 70 70 2 -3 -2 -25 -9 -50 -8 -25
+						-16 -62 -19 -83 -4 -32 -2 -37 11 -34 15 4 17 -7 18 -91 1 -95 7 -120 62 -223
+						2 -3 -7 -4 -20 -1 -13 3 2 -11 32 -31 30 -19 64 -36 74 -36 11 0 28 -8 38 -17
+						11 -9 34 -17 52 -17 26 0 33 -4 29 -15 -4 -13 -3 -13 5 -2 7 9 15 10 28 3 30
+						-15 90 -24 78 -12 -8 8 9 31 58 80 37 38 68 74 68 79 0 5 12 23 26 40 16 19
+						24 38 20 47 -4 12 -2 15 9 10 8 -3 15 -1 15 4 0 5 7 7 15 4 9 -4 15 -19 15
+						-38 0 -18 4 -36 10 -42 19 -19 -108 -174 -143 -174 -6 0 -7 -3 -4 -6 4 -4 25
+						6 47 21 22 15 43 25 47 22 7 -8 24 19 49 75 9 21 21 35 27 31 7 -4 8 1 3 13
+						-6 16 -4 16 14 -3 21 -24 36 -31 25 -13 -3 6 0 10 8 10 8 0 17 7 21 15 3 8 12
+						12 20 9 39 -15 86 183 68 286 -6 30 -13 66 -16 79 -5 23 -5 23 14 6 22 -20 64
+						-104 77 -151 4 -16 7 -63 6 -105 0 -67 -6 -88 -52 -194 -28 -65 -49 -120 -48
+						-122 2 -2 21 13 43 33 21 20 31 31 22 24 -23 -16 -23 -13 7 51 41 92 56 166
+						53 266 -2 52 -7 89 -12 85 -5 -3 -6 2 -3 12 4 9 3 15 -2 12 -5 -3 -12 1 -15
+						10 -4 10 -2 13 6 8 14 -9 5 8 -28 53 -13 17 -24 35 -24 38 0 4 17 4 38 1 20
+						-3 41 -5 45 -6 5 0 5 -4 2 -10 -4 -6 1 -7 11 -3 13 5 15 3 9 -8 -8 -12 -6 -12
+						8 0 10 8 17 9 17 3 0 -6 -8 -16 -17 -21 -10 -6 -13 -11 -7 -11 6 0 17 7 24 15
+						7 8 17 15 22 15 6 0 4 -8 -3 -17 -8 -9 -9 -14 -2 -10 6 4 14 1 16 -5 3 -7 6
+						-4 6 8 1 27 -17 44 -49 44 -39 0 -44 12 -13 27 16 7 19 11 8 7 -11 -3 -38 -9
+						-60 -12 -36 -5 -39 -4 -26 11 7 10 25 17 39 17 28 0 112 45 112 60 0 6 -8 10
+						-17 11 -134 7 -143 7 -143 -6 0 -14 -33 -26 -47 -16 -6 3 -13 13 -16 21 -4 12
+						-6 11 -6 -3 -1 -10 -6 -15 -11 -12 -6 4 -8 10 -5 15 7 11 -165 8 -182 -3 -8
+						-5 -13 -4 -13 2 0 6 -5 11 -12 11 -9 0 -9 -3 0 -12 9 -9 9 -15 -1 -27 -10 -14
+						-10 -14 3 -5 22 17 49 14 42 -4 -4 -11 -1 -13 9 -7 8 4 11 4 6 0 -4 -5 -17
+						-10 -29 -12 -18 -3 -19 -1 -7 14 13 16 12 17 -3 4 -20 -15 -14 -35 8 -27 10 4
+						14 0 12 -12 -2 -12 3 -16 17 -13 19 3 19 2 2 -17 -14 -15 -15 -22 -6 -28 8 -5
+						10 -3 4 6 -5 9 -4 11 4 6 9 -6 9 -11 0 -22 -10 -13 -6 -18 13 -15 3 0 5 -11 3
+						-25 -1 -13 2 -27 8 -31 6 -4 7 -1 2 7 -5 8 -4 11 3 7 8 -6 10 -42 2 -42 -1 0
+						-3 -8 -5 -18 -2 -9 0 -15 5 -12 10 6 8 -15 -3 -32 -5 -8 -3 -13 3 -13 6 0 8
+						-5 4 -11 -4 -7 -7 -38 -6 -70 0 -33 -4 -61 -9 -65 -5 -3 -9 2 -9 10 0 8 -25
+						52 -56 97 -83 120 -127 219 -133 298 -5 59 -8 66 -28 67 -13 1 -20 -2 -18 -6
+						6 -10 -46 -7 -65 4 -9 6 -8 1 4 -12 10 -12 26 -21 35 -20 9 1 25 0 36 -1 18
+						-2 18 -3 -3 -12 -15 -6 -31 -5 -44 2 -11 6 -22 8 -25 6 -2 -3 5 -8 18 -12 17
+						-6 19 -9 8 -17 -13 -9 -2 -7 51 9 10 3 11 2 4 -4 -6 -4 -10 -16 -8 -26 2 -13
+						-11 -24 -42 -39 -26 -13 -39 -25 -33 -29 12 -7 -19 -13 -124 -24 -32 -4 -89
+						-17 -128 -30 -38 -13 -69 -23 -69 -21 0 2 29 33 65 70 36 37 65 71 65 76 0 5
+						7 7 15 4 10 -4 15 0 15 12 0 15 2 16 9 5 6 -10 11 -6 19 15 7 19 11 23 11 11
+						1 -15 3 -16 14 -5 7 7 16 21 20 31 6 15 4 16 -13 7 -11 -6 -20 -7 -20 -3 0 5
+						-91 9 -202 9 -112 0 -168 -2 -125 -4z m556 -197 c1 -15 -2 -16 -8 -7 -6 10
+						-10 7 -15 -11 -3 -14 -8 -33 -11 -44 -3 -10 1 -4 9 12 8 17 15 26 16 20 0 -5
+						7 1 15 15 l14 25 7 -32 c3 -18 11 -33 16 -33 5 0 7 -8 4 -17 -3 -10 -8 -31
+						-11 -48 -5 -28 -4 -28 9 5 9 21 15 28 15 17 1 -10 6 -15 11 -12 6 3 10 -3 10
+						-15 0 -12 4 -19 9 -16 5 3 13 -7 19 -22 24 -70 -107 -274 -195 -303 -28 -9
+						-38 -8 -58 5 -14 9 -25 22 -26 29 0 6 -4 2 -9 -11 -8 -19 -13 -21 -30 -12 -11
+						6 -31 27 -45 48 -24 34 -25 35 -19 10 5 -24 3 -28 -14 -28 -25 0 -74 57 -108
+						127 -23 47 -26 62 -23 142 3 52 9 95 16 102 9 9 11 6 7 -12 -4 -17 -1 -14 10
+						9 8 17 18 32 21 32 3 0 3 -6 0 -12 -4 -7 0 -5 9 6 21 25 40 15 42 -22 1 -17
+						-2 -29 -7 -27 -4 3 -11 1 -14 -5 -4 -6 -1 -9 7 -8 16 4 18 -79 3 -101 -7 -11
+						-7 -13 1 -8 8 4 12 -4 11 -26 0 -31 9 -86 15 -92 2 -2 3 60 3 138 0 163 7 187
+						56 183 17 -1 35 -9 41 -17 8 -11 9 -11 5 2 -7 22 42 34 50 12 4 -11 8 -10 19
+						4 12 16 15 16 24 3 8 -13 10 -13 10 2 0 20 56 42 64 25 2 -7 5 -3 6 8 l1 20 9
+						-20 c5 -11 9 -29 9 -40z"/>
+						<path d="M2795 1469 c-5 -15 -10 -18 -15 -9 -5 8 -9 7 -13 -5 -4 -9 -3 -13 3
+						-10 17 11 11 -6 -25 -72 -20 -34 -34 -63 -31 -63 3 0 24 35 48 77 23 42 43 72
+						46 65 2 -6 -2 -21 -8 -33 -8 -15 -9 -19 -1 -15 15 10 14 0 -4 -34 -14 -27 -14
+						-29 2 -23 11 4 14 3 9 -5 -4 -7 -1 -15 7 -18 39 -15 -10 -94 -104 -165 -29
+						-23 -45 -38 -34 -34 47 18 58 12 59 -30 1 -39 2 -40 36 -40 37 0 87 -23 109
+						-49 11 -14 8 -22 -21 -58 -70 -88 -122 -189 -174 -342 -13 -38 -24 -80 -24
+						-93 0 -21 3 -23 23 -17 35 11 138 64 182 94 66 45 115 62 205 70 l85 7 -66 2
+						c-84 1 -150 -18 -228 -69 -91 -59 -159 -92 -166 -80 -4 6 8 28 25 50 33 42 53
+						52 44 23 -3 -10 1 -7 9 6 11 18 16 21 21 10 3 -8 4 -4 2 9 -2 12 0 20 4 17 5
+						-3 25 11 45 31 32 31 36 33 31 12 -4 -15 0 -11 12 11 13 24 21 30 25 20 4 -12
+						6 -11 7 1 0 8 8 24 16 35 16 19 16 19 10 -5 -7 -24 -6 -24 9 3 18 31 27 36 19
+						10 -3 -10 6 1 21 25 27 43 39 54 28 25 -4 -11 -3 -14 5 -9 7 4 12 2 12 -5 0
+						-7 13 6 29 29 37 51 58 64 37 24 -26 -50 -18 -49 15 1 38 57 46 61 19 7 -24
+						-46 -26 -62 -5 -34 11 14 14 15 15 4 0 -13 1 -13 10 0 5 8 10 20 10 25 0 6 -5
+						3 -10 -5 -5 -8 -10 -10 -10 -4 0 14 39 63 40 50 0 -5 10 -1 23 10 22 19 22 19
+						6 -1 -19 -23 -49 -80 -49 -92 0 -4 4 -2 8 5 11 17 62 -22 62 -48 0 -24 19 -74
+						26 -68 2 3 -1 18 -8 33 -10 23 -10 29 1 33 9 3 1 17 -24 42 l-37 38 28 15 c16
+						8 43 30 59 48 30 32 30 33 3 16 -22 -14 -28 -14 -38 -2 -6 7 -21 15 -33 17
+						-47 7 -43 75 9 143 14 19 16 19 45 2 17 -9 36 -17 42 -17 7 0 -10 13 -38 28
+						-38 20 -51 33 -53 53 -3 24 -47 58 -59 45 -2 -2 4 -7 14 -10 10 -3 27 -23 36
+						-44 17 -37 17 -37 -12 -77 -15 -22 -32 -39 -38 -38 -5 1 -7 -11 -5 -28 3 -24
+						1 -29 -16 -29 -11 0 -25 7 -32 15 -7 8 -47 40 -90 69 -60 43 -83 65 -100 102
+						-28 56 -40 185 -20 209 16 19 30 10 31 -18 0 -21 1 -21 9 -2 7 18 8 16 12 -10
+						l5 -30 2 33 c1 37 10 41 31 13 7 -11 17 -18 22 -15 4 3 8 1 8 -5 0 -6 7 -8 15
+						-5 8 4 15 1 15 -6 0 -20 40 -49 61 -45 22 4 25 -5 7 -23 -10 -10 -7 -17 12
+						-35 13 -12 18 -14 11 -5 -15 20 -6 74 14 82 8 3 11 13 8 25 -3 12 0 28 7 36
+						11 13 10 14 -3 9 -9 -3 -20 -19 -26 -35 -15 -43 -40 -48 -67 -13 -13 16 -38
+						34 -56 40 -28 9 -34 16 -38 50 -3 26 -8 35 -13 26 -14 -21 -80 -59 -116 -67
+						l-34 -7 8 58 c4 33 9 62 12 67 2 4 35 7 73 7 57 0 69 -3 73 -17 4 -17 5 -17 6
+						0 1 15 13 17 96 17 l94 0 11 -41 c7 -23 9 -50 7 -60 -6 -23 -5 -23 37 -5 43
+						18 185 50 192 43 12 -12 -23 -47 -56 -55 -25 -7 -28 -10 -12 -11 27 -1 28 -5
+						1 -32 -12 -12 -19 -29 -16 -40 4 -16 -1 -19 -26 -21 -22 -1 -16 -3 18 -7 l50
+						-6 0 -42 c0 -30 6 -46 23 -61 25 -22 29 -50 8 -58 -8 -3 -12 -13 -8 -26 4 -17
+						2 -19 -19 -13 -59 17 -59 17 -53 1 4 -10 1 -16 -9 -16 -20 0 -31 -30 -16 -44
+						9 -8 10 -7 6 6 -4 12 0 21 13 28 25 13 93 13 85 0 -4 -6 7 -10 24 -10 17 0 31
+						-5 31 -11 0 -6 -9 -9 -20 -6 -11 3 -18 1 -14 -4 3 -5 -2 -9 -11 -9 -21 0 -45
+						-24 -45 -45 0 -33 20 -55 50 -55 30 0 42 -22 20 -35 -28 -17 18 -95 57 -95 10
+						0 13 -6 9 -16 -3 -8 -2 -12 4 -9 6 3 10 1 10 -4 0 -6 -8 -12 -17 -12 -10 -1
+						-2 -5 17 -9 l35 -7 -30 -2 c-26 -2 -27 -4 -10 -11 32 -14 67 -12 63 4 -2 7
+						-33 39 -70 70 -68 57 -79 75 -55 93 15 12 59 15 52 3 -3 -4 1 -11 7 -14 7 -3
+						2 -3 -12 -1 -25 6 -25 5 3 -10 31 -18 36 -27 10 -19 -15 5 -16 4 -3 -5 8 -6
+						23 -8 32 -5 13 4 16 0 13 -15 -2 -14 1 -18 11 -14 19 7 18 33 -2 48 -9 6 -17
+						22 -18 36 -1 20 -9 25 -54 35 -110 25 -141 53 -84 76 71 29 172 78 172 83 0 7
+						-36 -2 -67 -17 -24 -12 -58 -6 -87 15 -19 14 -19 14 0 46 l19 32 -34 28 c-30
+						25 -33 31 -26 61 7 30 4 37 -21 57 l-29 23 91 89 c58 58 103 93 125 99 l34 10
+						-42 1 c-31 1 -43 -3 -43 -13 0 -8 -9 -18 -20 -21 -11 -3 -20 -9 -20 -13 0 -4
+						-48 -8 -106 -9 -76 -2 -116 2 -142 13 -39 16 -35 30 13 37 17 2 -74 5 -202 6
+						-228 1 -232 1 -238 -20z m40 -239 c6 -9 -4 -53 -21 -94 -5 -14 -4 -17 4 -12 8
+						5 12 0 12 -15 0 -21 0 -21 20 2 18 23 19 23 20 4 0 -11 5 -27 10 -35 8 -11 9
+						-7 5 15 l-6 30 16 -25 16 -25 -6 25 c-6 24 -6 25 10 5 9 -11 19 -20 23 -20 4
+						0 29 -15 55 -34 54 -37 52 -59 -2 -40 -25 9 -38 9 -56 -1 -21 -11 -30 -9 -80
+						25 -46 30 -56 41 -51 58 4 18 1 16 -18 -7 -13 -18 -27 -26 -35 -22 -6 4 -9 11
+						-6 16 3 5 10 32 15 61 13 66 57 119 75 89z"/>
+						<path d="M481 1243 c0 -12 -4 -28 -7 -36 -4 -11 0 -14 13 -11 12 3 28 -10 53
+						-42 85 -115 112 -215 71 -272 -10 -15 -26 -48 -35 -73 -16 -43 -17 -49 -1
+						-105 26 -91 73 -173 109 -190 17 -8 45 -23 61 -34 17 -10 50 -22 75 -25 l45
+						-5 -45 14 c-25 8 -55 17 -66 21 -24 8 -57 48 -69 84 -7 22 -3 21 40 -13 50
+						-38 61 -42 67 -26 2 5 25 -1 52 -15 27 -14 57 -25 65 -24 9 0 3 5 -14 11 -55
+						19 -95 56 -95 89 0 36 18 38 67 8 19 -12 36 -19 39 -16 3 2 -15 16 -40 31 -25
+						14 -47 30 -50 34 -2 4 3 32 11 62 9 30 18 74 20 97 4 29 9 41 17 36 17 -11 37
+						-12 30 -2 -8 14 30 11 45 -3 8 -8 11 -8 8 -2 -7 12 34 24 77 24 44 0 146 -142
+						146 -203 0 -31 -19 -57 -43 -58 -12 0 -16 -3 -9 -6 21 -8 13 -23 -19 -37 -17
+						-7 -28 -16 -23 -18 15 -9 54 10 61 29 3 10 17 30 29 46 l23 27 -20 57 c-18 53
+						-62 129 -83 144 -16 12 3 42 22 34 9 -4 24 -7 32 -7 15 0 60 -58 60 -78 0 -5
+						5 -10 10 -10 6 0 10 2 10 5 0 13 -31 65 -39 65 -5 0 -11 9 -14 20 -3 11 -1 20
+						5 20 6 0 8 11 6 25 -3 13 0 26 6 28 17 6 -64 75 -123 104 -41 20 -73 28 -136
+						31 -73 4 -90 1 -139 -21 -75 -35 -108 -25 -175 50 -28 31 -51 60 -51 64 0 4
+						-15 16 -34 27 -19 11 -36 31 -39 44 -4 22 -4 22 -6 1z m351 -269 c9 1 23 8 32
+						15 13 11 17 11 21 0 3 -8 23 -15 46 -16 23 -2 76 -19 118 -40 l76 -37 -70 -13
+						c-38 -7 -106 -14 -150 -14 -68 -2 -89 2 -136 25 -32 14 -63 34 -70 43 -8 10
+						-9 14 -2 10 7 -4 14 0 18 12 4 14 14 18 46 16 33 -2 39 1 35 14 -5 14 -4 14 7
+						-1 7 -9 20 -16 29 -14z m-141 -93 c6 11 9 8 9 -8 0 -25 10 -29 28 -11 9 9 12
+						8 12 -6 0 -11 6 -16 18 -14 9 2 16 10 14 17 -1 8 7 6 22 -6 14 -10 26 -27 26
+						-38 0 -17 2 -18 11 -5 12 18 11 13 -20 -95 -11 -38 -23 -92 -27 -120 -4 -27
+						-9 -43 -11 -35 -3 8 -14 37 -25 64 -11 27 -22 58 -24 70 -2 11 -6 30 -8 41 -3
+						11 -14 38 -25 60 -12 21 -20 55 -20 75 1 19 3 27 6 16 4 -15 7 -16 14 -5z"/>
+						<path d="M10 673 c5 -2 17 -30 26 -61 25 -88 54 -130 158 -228 53 -50 96 -96
+						96 -102 0 -18 -26 -14 -73 9 -37 19 -40 23 -22 30 17 6 15 8 -10 8 -23 1 -27
+						4 -15 11 12 7 8 10 -15 11 -26 0 -27 2 -10 9 18 8 17 9 -8 9 -16 1 -26 5 -23
+						10 3 5 -11 12 -31 16 -27 5 -33 9 -22 16 10 6 6 9 -16 10 -30 2 -30 2 5 9 l35
+						7 -40 2 c-30 1 -36 4 -25 11 13 8 12 10 -2 10 -16 0 -18 -11 -18 -99 l0 -98
+						33 -7 c61 -13 287 -20 287 -9 0 19 -57 88 -134 161 -91 87 -100 101 -135 194
+						-14 39 -32 73 -39 74 -7 1 -8 0 -2 -3z"/>
+						<path d="M3313 651 c30 -36 32 -43 16 -72 -9 -18 -8 -19 10 -7 18 11 25 10 48
+						-4 16 -10 27 -22 26 -27 -2 -6 3 -8 11 -5 7 3 20 -2 29 -10 8 -8 17 -12 21 -9
+						3 4 6 2 6 -4 0 -6 9 -13 21 -16 13 -4 18 -10 14 -17 -6 -9 -2 -9 13 -1 14 7
+						23 8 27 1 3 -5 2 -10 -4 -10 -5 0 -25 -14 -43 -31 l-33 -31 39 16 c21 9 41 16
+						45 16 14 -1 -42 -40 -58 -40 -14 0 -14 -2 -1 -10 11 -7 12 -10 2 -10 -10 0 -9
+						-4 2 -16 9 -8 13 -20 10 -26 -4 -7 -2 -8 5 -4 12 8 44 -18 34 -28 -4 -3 -1 -6
+						5 -6 19 0 14 -30 -5 -31 -10 0 -13 -3 -8 -5 18 -7 5 -86 -15 -91 -12 -3 -16
+						-11 -13 -24 3 -10 0 -33 -7 -50 -10 -24 -10 -32 0 -42 10 -10 12 -8 7 5 -4 11
+						0 21 11 27 9 6 14 11 11 11 -7 0 -2 22 25 123 22 80 21 88 -16 120 -25 21 -29
+						30 -19 34 31 12 61 53 61 81 0 25 -5 30 -42 41 -75 22 -151 70 -188 117 -19
+						25 -44 50 -55 56 -15 8 -13 3 8 -21z"/>
+						</g>
+					</svg>`;
+			const scaffold = `<div class="thumbnail">
+				<span class="row m-0">
+					<h2>:name</h2>
+							<div class="col-5 my-auto">
+								<img src=":image" class="wanted" />
+								<button class="mb-2 btn btn-primary" type="button" id=":id" onclick="reveal(this)">Investigate</button>
+							</div>
+							<div class="col-7">
+								<p style="font-size:large;">:bio</p>
+								<p id="reward_:id" class="blurred"><b>Clue:</b> :reward</p>
+							</div>
+							</span>
+						</div>`;
+			const popup = `<div id="popup_:id" class="popup fadein">
+				<div style="text-align:start;">Code Word for :name:</div>
+				<input id="pass_:id" placeholder="" class="form-control" type="text"/><br/>
+				<button class="btn btn-light" onclick="done(':id',true)">Cancel</button>
+				<button class="btn btn-primary" onclick="done(':id')">Confirm</button>
+				</div>`;
+
+			const content = `The Lady	https://td-wedding-murder-mystery.s3.amazonaws.com/assets/stella.png	LADY D	While scratching her pup's ears, the Lady states with great confidence that La Principessa is the killer. Her evidence? "The vibe is off. Also, I saw her mixing a suspicious batter earlier."	A great lover of animals, the Lady delights in spending her spare time walking the pets of the Countess' inner circle. The only way to gain her trust is to gain the affection (and name) of her <i>own</i> beloved pet.
+The Captain	https://td-wedding-murder-mystery.s3.amazonaws.com/assets/josh.png	KRAKEN	The Captain had an appointment with the Countess next week to pitch his sea-salted caramel macaron business.	Ever the gracious host, the Captain has offered to give the Countess a proper burial at sea. This is despite his lack of celebrancy licence, funds, and actual seafaring vessel. Maybe if he could find enough cash, he'd loosen his tongue…
+The Professor	https://td-wedding-murder-mystery.s3.amazonaws.com/assets/al.png	LEO	The Professor tells you that they were secretly manufacturing expensive vegan baking subsitutes for the Countess and La Principessa. The three were, privately, thick as thieves.	The Professor was no great friend of the Countess, though their social circles often intertwined. An accomplished scholar, one must read between the lines in a number puzzle to outwit the Professor.
+The Doctor	https://td-wedding-murder-mystery.s3.amazonaws.com/assets/jess.png	SCIENCES	Through detailed scientific analysis of the meringue crumbs around the Countess' body, the Doctor can reveal that the poison was delivered via laced aquafaba in a vegan macaron.	Despite lucrative offers from other wealthy celebrities, the Doctor has remained the Countess' healthcare practitioner for decades. They'd probably be able to perform a proper autopsy if they had their first aid kit.
+The Lord	https://td-wedding-murder-mystery.s3.amazonaws.com/assets/sam.png	DACHSHUND	Conspirationally, the Lord leans in and whispers "I hear the Countess hated animals. Shocking, I know."	The Lord is proudest of his hound, an expert investigator and professional baked treat scoffer. He professes great regret at the Countess' untimely demise. He could be convinced to profess further if his round hound could be found.
+La Principessa	https://td-wedding-murder-mystery.s3.amazonaws.com/assets/stace.png	FONDANT	Through a mist of tears, La Principessa confesses that she has been suspicious of the Professor for quite some time.	A lover, a muse, and an expert patissier. La Principessa has amassed a fortune as a decadent designer of pastries, and famously held great affection for the late Countess. She would be very grateful if the Countess' most beloved family heirloom could be located right away.
+The Baron	https://td-wedding-murder-mystery.s3.amazonaws.com/assets/liam.png	SUBTERFUGE	The Baron howls "Don't believe the Lady! Everything she says is a lie!"	The youngest of our possible culprits (but by no means the least dangerous), the Baron possesses an intellect and cunning far beyond his years. A favourite of the late Countess, this slippery Baron's keen mind can be outdone only by careful analysis of word puzzles.
+Tom	https://td-wedding-murder-mystery.s3.amazonaws.com/assets/tom.png 	MAI SPAYCE	Tom, happily disguised, can reveal that he funded the Countess' very first chocolaterie, which spawned her empire of baking.	A friend to all, Tom has spent years avoiding the spotlight. Now, as the sole heir to the Countess' large fortune, he is thrust under sudden scrutiny. Perhaps finding a disguise for him will make him cooperate with the investigation.
+Jennifer Coolidge	https://td-wedding-murder-mystery.s3.amazonaws.com/assets/jennifer.png	LOWTUSS	Jennifer Coolidge, clutching her Golden Globe, points at the Baron and says "I don't trust that baby."	What is she doing here? Even she doesn't know. Oh, that's right - she was looking for her Golden Globe. Have you seen it?
+`;
+
+		</script>
+	</body>
+</html>
